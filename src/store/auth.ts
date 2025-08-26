@@ -6,7 +6,7 @@ type User = { id: number; username: string; email: string; first_name?: string; 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') as string | null,
-    role: localStorage.getItem('role') || 'user',
+    role: localStorage.getItem('role') || 'viewer',
         user: (() => {
           const raw = localStorage.getItem('user');
           if (!raw || raw === 'undefined') return null;
@@ -32,7 +32,8 @@ export const useAuthStore = defineStore('auth', {
         // se espera { token, usuario }
         this.token = data.token;
         this.user = data.usuario;
-        this.role = data.usuario?.rol || 'user';
+        this.role = data.usuario?.rol || 'viewer';
+        console.log(this.role);
 
         localStorage.setItem('token', this.token!);
         localStorage.setItem('role', this.role);
@@ -45,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     logout() {
-      this.token = null; this.user = null; this.role = 'user';
+      this.token = null; this.user = null; this.role = 'viewer';
       localStorage.removeItem('token');
       localStorage.removeItem('role');
       localStorage.removeItem('user');

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import '../styles/login.css';
 
 const email = ref('');
 const password = ref('');
@@ -20,31 +21,24 @@ async function onSubmit() {
 
 <template>
 
-
-
-
-  <div class="login-bg">
-    <div class="login-card">
-      <h1 class="login-title">RAGPersonal</h1>
-
-      <form class="login-form" @submit.prevent="onSubmit">
-        <div>
-          <label class="login-label">Email:</label>
-          <input v-model="email" type="email" class="login-input" autocomplete="email" required />
-        </div>
-
-        <div>
-          <label class="login-label">Contraseña:</label>
-          <input v-model="password" type="password" class="login-input" autocomplete="current-password" required />
-        </div>
-
-        <button class="login-btn" :disabled="store.loading">
-          <span v-if="!store.loading">Iniciar Sesión</span>
-          <span v-else>Validando…</span>
-        </button>
-
-        <p v-if="store.error" class="login-error">{{ store.error }}</p>
-      </form>
-    </div>
+<div class="login-container">
+  <div class="login-box">
+    <h1>RAGPersonal</h1>
+    <form @submit.prevent="onSubmit">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input v-model="email" id="email" type="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input v-model="password" id="password" type="password" required />
+      </div>
+      <button :disabled="store.loading">
+        <span v-if="!store.loading">Iniciar Sesión</span>
+        <span v-else>Validando…</span>
+      </button>
+      <div class="error-message">{{ store.error }}</div>
+    </form>
   </div>
+</div>
 </template>

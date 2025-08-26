@@ -1,0 +1,103 @@
+/* Estilos para la tabla de documentos */
+.documents-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 24px;
+}
+.documents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.documents-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #222e3c;
+}
+.documents-btn {
+  background: #22c55e;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.documents-btn:hover {
+  background: #16a34a;
+}
+.documents-filters {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.documents-filter-input {
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.documents-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.documents-table th {
+  background: #f5f5f5;
+  color: #222e3c;
+  font-weight: 600;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.documents-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+}
+.documents-table tr:last-child td {
+  border-bottom: none;
+}
+.documents-link {
+  color: #1976d2;
+  text-decoration: underline;
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 0.98rem;
+}
+.documents-link:hover {
+  color: #0d47a1;
+}
+.documents-error {
+  color: #d32f2f;
+  margin: 8px 0;
+  text-align: left;
+}
+.documents-pagination {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.documents-pagination-btn {
+  padding: 6px 16px;
+  border-radius: 5px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.documents-pagination-btn:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
