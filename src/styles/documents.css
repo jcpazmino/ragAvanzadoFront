@@ -1,3 +1,62 @@
+.pagination-container {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.msg-loading {
+  color: #1976d2;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.msg-error {
+  color: #d32f2f;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.doc-link {
+  color: #1976d2;
+  font-size: 0.97rem;
+  text-decoration: none;
+  padding: 0 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: text-decoration 0.2s;
+}
+.doc-link:disabled {
+  color: #bdbdbd;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+.doc-link:hover:enabled {
+  text-decoration: underline;
+  color: #1565c0;
+}
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.add-doc-btn {
+  background: #22c55e;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 16px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-left: auto;
+  width: 200px;
+  min-width: 120px;
+}
 /* Estilos para la tabla de documentos */
 .documents-section {
   background: #fff;

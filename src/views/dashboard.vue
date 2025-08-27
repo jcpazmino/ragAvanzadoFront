@@ -50,7 +50,7 @@ function handleEditDocument(data: any) {
         </ul>
       </aside>
       <section class="main-content">
-    <div class="dashboard-card">
+          <div >
             <UsersTable v-if="activeSection==='users'" />
             <template v-if="activeSection==='documents'">
               <DocumentForm v-if="showDocumentForm" :editData="editDocumentData" @cancel="showDocumentForm=false" />

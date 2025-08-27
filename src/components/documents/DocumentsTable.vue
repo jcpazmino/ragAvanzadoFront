@@ -37,15 +37,33 @@ function fetchDocuments() {
     category: filterCategory.value
   });
   const userRole = localStorage.getItem('role') || 'viewer';
+  let userId = '';
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    userId = user.id ? String(user.id) : '';
+  } catch {}
   fetch(`http://localhost:3000/api/documents?${params.toString()}`, {
     method: 'GET',
     headers: {
-      'X-User-Role': userRole
+      'X-User-Role': userRole,
+      'X-User-Id': userId
     }
   })
     .then(res => res.json())
     .then(data => {
-      documents.value = data.documents || [];
+      documents.value = (data.documents || []).map(doc => ({
+        id: doc.id,
+        title: doc.title,
+        fileName: doc.file_name,
+        description: doc.description,
+        source: doc.source,
+        language: doc.language,
+        uploadedBy: doc.uploaded_by,
+        categoryId: doc.category_id,
+        categoryName: doc.category_name,
+        metadata: doc.metadata,
+        createdAt: doc.created_at
+      }));
       totalCount.value = data.count || 0;
       totalPages.value = Math.max(1, Math.ceil((data.count || 0) / limit.value));
       loading.value = false;
@@ -62,16 +80,17 @@ watch([page, limit, filterTitle, filterCategory], fetchDocuments);
 
 <template>
   <section class="main-content">
-    <h2>Gestión de Documentos Activos</h2>
-    <button style="float:right; margin-bottom:10px; background:#22c55e; color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 24px; font-size:1rem; cursor:pointer;" @click="emit('add-document')">Adicionar Documento</button>
-    <table class="users-table" style="width:100%; border-collapse:collapse; margin-top:12px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+  <div class="header-flex">
+  <h2 style="margin:0;">Gestión de Documentos Activos</h2>
+    <button class="add-doc-btn" @click="emit('add-document')">Adicionar Documento</button>
+    </div>
+  <table class="users-table doc-table">
       <thead>
         <tr>
           <th>Title</th>
           <th>File Name</th>
-          <th>Author</th>
           <th>Category</th>
-          <th>Version</th>
+          <th>Description</th>
           <th>Language</th>
           <th>Operaciones</th>
         </tr>
@@ -82,8 +101,7 @@ watch([page, limit, filterTitle, filterCategory], fetchDocuments);
         <tr v-for="doc in documents" :key="doc.id">
           <td>{{ doc.title }}</td>
           <td>{{ doc.fileName }}</td>
-          <td>{{ doc.uploadedBy }}</td>
-          <td>{{ doc.categoryId }}</td>
+          <td>{{ doc.categoryName }}</td>
           <td>{{ doc.description }}</td>
           <td>{{ doc.language }}</td>
           <td>
@@ -94,10 +112,23 @@ watch([page, limit, filterTitle, filterCategory], fetchDocuments);
         </tr>
       </tbody>
     </table>
-    <div style="margin-top:18px; display:flex; justify-content:center; gap:8px;">
-      <button :disabled="page===1" @click="page--" style="padding:6px 16px; border-radius:5px; border:none; background:#1976d2; color:#fff; font-weight:500; cursor:pointer;">Anterior</button>
+    <div v-if="totalPages > 1" class="pagination-container">
+      <button :disabled="page===1" @click="page--" class="doc-link" style="background:none;">Anterior</button>
       <span>Página {{ page }} de {{ totalPages }}</span>
-      <button :disabled="page===totalPages" @click="page++" style="padding:6px 16px; border-radius:5px; border:none; background:#1976d2; color:#fff; font-weight:500; cursor:pointer;">Siguiente</button>
+      <button :disabled="page===totalPages" @click="page++" class="doc-link" style="background:none;">Siguiente</button>
+    </div>
+    <div class="msg-container">
+      <div v-if="loading" class="msg-loading">Cargando documentos...</div>
+      <div v-if="error" class="msg-error">{{ error }}</div>
     </div>
   </section>
 </template>
+
+<style>
+.header-flex {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+</style>
