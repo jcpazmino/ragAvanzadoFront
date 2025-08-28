@@ -12,6 +12,7 @@ interface Document {
   language: string;
   uploadedBy: string | number;
   categoryId: string | number;
+  categoryName: string;
   metadata?: any;
   createdAt?: string;
 }

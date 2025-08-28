@@ -1,3 +1,10 @@
+// Lenguajes disponibles para documentos
+export const DOCUMENT_LANGUAGES = [
+  { value: 'es', label: 'Español' },
+  { value: 'en', label: 'Inglés' },
+  { value: 'pt', label: 'Portugués' }
+];
+
 import { defineStore } from 'pinia';
 import { api } from '../services/api';
 

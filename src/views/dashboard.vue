@@ -28,7 +28,7 @@ function handleEditDocument(data: any) {
 }
 </script>
 
-<template>
+<template style="min-width: 90%;">
   <header>
     <nav>
       <div class="logo">RAGPersonal</div>

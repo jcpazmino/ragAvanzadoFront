@@ -1,12 +1,55 @@
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+const users = ref<User[]>([]);
+const page = ref(1);
+const limit = ref(10);
+const totalPages = ref(1);
+const totalCount = ref(0);
+const loading = ref(false);
+const error = ref('');
+
+function fetchUsers() {
+  loading.value = true;
+  error.value = '';
+  // Simulación de API, reemplaza por tu fetch real
+  setTimeout(() => {
+    // Simula 5 usuarios y 1 página
+    users.value = [
+      { id: 1, username: 'root_user', email: 'root@example.com', firstName: 'Super', lastName: 'Usuario', role: 'root' },
+      { id: 2, username: 'admin_user', email: 'admin@example.com', firstName: 'Ana', lastName: 'Gómez', role: 'admin' },
+      { id: 3, username: 'regular_user', email: 'user@example.com', firstName: 'Luis', lastName: 'Martínez', role: 'user' },
+      { id: 4, username: 'editor_user', email: 'editor@example.com', firstName: 'Editor', lastName: 'Editor', role: 'editor' },
+      { id: 5, username: 'usuario prueba', email: 'usuarioPrueba@example.com', firstName: 'usuario', lastName: 'prueba', role: 'user' }
+    ];
+    totalCount.value = users.value.length;
+    totalPages.value = 1;
+    loading.value = false;
+  }, 500);
+}
+
+onMounted(fetchUsers);
+watch([page, limit], fetchUsers);
 // Este componente muestra la tabla de usuarios activos y el botón para adicionar usuario
 </script>
 
 <template>
   <section class="main-content">
     <h2>Gestión de Usuarios Activos</h2>
-    <button style="float:right; margin-bottom:10px; background:#22c55e; color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 24px; font-size:1rem; cursor:pointer;">Adicionar Usuario</button>
-    <table class="users-table" style="width:100%; border-collapse:collapse; margin-top:12px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <div class="header-flex">
+      <h2 style="margin:0;">Gestión de Usuarios Activos</h2>
+      <button class="add-doc-btn">Adicionar Usuario</button>
+    </div>
+  <table class="users-table doc-table">
       <thead>
         <tr>
           <th>Username</th>
@@ -60,5 +103,14 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="totalPages > 1" class="pagination-container">
+      <button :disabled="page===1" @click="page--" class="doc-link" style="background:none;">Anterior</button>
+      <span>Página {{ page }} de {{ totalPages }}</span>
+      <button :disabled="page===totalPages" @click="page++" class="doc-link" style="background:none;">Siguiente</button>
+    </div>
+    <div class="msg-container">
+      <div v-if="loading" class="msg-loading">Cargando usuarios...</div>
+      <div v-if="error" class="msg-error">{{ error }}</div>
+    </div>
   </section>
 </template>
