@@ -63,7 +63,8 @@ function fetchDocuments() {
         categoryId: doc.category_id,
         categoryName: doc.category_name,
         metadata: doc.metadata,
-        createdAt: doc.created_at
+        createdAt: doc.created_at,
+        author: doc.author || ''
       }));
       totalCount.value = data.count || 0;
       totalPages.value = Math.max(1, Math.ceil((data.count || 0) / limit.value));

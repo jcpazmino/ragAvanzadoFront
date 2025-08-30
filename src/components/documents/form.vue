@@ -113,6 +113,7 @@ const form = ref<FormData>({
 
 watch(() => props.editData, (val) => {
   if (val) {
+    console.log('Edit data received:', val);
     isEdit.value = true;
     form.value = {
       title: val.title || '',
