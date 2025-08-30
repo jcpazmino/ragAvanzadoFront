@@ -181,7 +181,7 @@ function onSubmit() {
   uploadDocument({
     title: form.value.title,
     description: form.value.description,
-    author: userId,
+    author: form.value.author,
     categoryId: form.value.category,
     language: form.value.language,
     version: form.value.version,
@@ -205,7 +205,7 @@ function onSubmit() {
 async function uploadDocument({
   title,
   description,
-  author,         // normalmente el userId autenticado
+  author,         
   categoryId,     // debe ser el id de la categoría seleccionada
   language,
   version,
@@ -216,7 +216,8 @@ async function uploadDocument({
   const formData = new FormData();
   formData.append('title', title);
   formData.append('description', description);
-  formData.append('uploadedBy', author);      // o 'author' si el backend lo espera así
+  formData.append('author', author);
+  formData.append('uploadedBy', userId);      
   formData.append('categoryId', categoryId);
   formData.append('language', language);
   formData.append('version', version);
