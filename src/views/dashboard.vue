@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { INACTIVITY_LIMIT } from '../config/appConfig';
 import { useAuthStore } from '../store/auth';
 import { useRouter } from 'vue-router';
 import UsersTable from '../components/UsersTable.vue';
@@ -12,6 +13,32 @@ function logout() {
   store.logout();
   router.push({ name: 'login' });
 }
+
+// --- Auto logout after 10 minutes of inactivity ---
+let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
+
+function resetInactivityTimer() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    alert('Sesión cerrada por inactividad.');
+    logout();
+  }, INACTIVITY_LIMIT);
+}
+
+function setupInactivityListeners() {
+  const events = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+  events.forEach(e => window.addEventListener(e, resetInactivityTimer));
+  resetInactivityTimer();
+}
+
+function removeInactivityListeners() {
+  const events = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+  events.forEach(e => window.removeEventListener(e, resetInactivityTimer));
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+}
+
+onMounted(setupInactivityListeners);
+onUnmounted(removeInactivityListeners);
 
 const showDocumentForm = ref(false);
 const editDocumentData = ref<Partial<{ title: string; description: string; author: string; category: string; language: string; version: string; file: File | null; fileName?: string; }> | undefined>(undefined);

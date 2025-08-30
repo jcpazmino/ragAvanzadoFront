@@ -25,20 +25,12 @@ Solo se permiten archivos PDF, DOCX y Markdown (.md) al subir documentos.
 
 ```bash
 npm install
-npm run dev
 ```
 
 ## Notas adicionales
 - Si el backend responde con error o formato no válido, se muestra un mensaje claro en el formulario.
 - Al guardar un documento exitosamente, se regresa automáticamente al listado.
 
----
-
-Template original Vue 3 + Vite:
-
-Este template ayuda a iniciar el desarrollo con Vue 3 y Vite. Usa `<script setup>` SFCs. Más información en la [documentación oficial](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup).
-
-Aprende más sobre el soporte IDE en la [guía oficial de Vue](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
 
 ## Iniciar la app
 ```bash
