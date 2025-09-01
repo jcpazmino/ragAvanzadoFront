@@ -34,13 +34,10 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true; this.error = null;
       try {
         const { data } = await api.post('/api/users/login', { email, password });
-        // Imprime en consola la respuesta completa del backend
-        console.log('Login response:', data);
-        // se espera { token, usuario }
+  // se espera { token, usuario }
         this.token = data.token;
         this.user = data.usuario;
         this.role = data.usuario?.rol || 'viewer';
-        console.log(this.role);
 
         localStorage.setItem('token', this.token!);
         localStorage.setItem('role', this.role);

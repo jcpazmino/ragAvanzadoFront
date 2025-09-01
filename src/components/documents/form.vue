@@ -37,7 +37,7 @@
       <div class="form-group">
         <label for="file">File:</label>
         <template v-if="isEdit">
-          <button type="button" class="btn-change">Cambiar Versión</button>
+          <button type="button" class="btn-change" @click="fileInputRef?.click()">Cambiar Versión</button>
           <span style="display:block; margin-top:8px; color:#666;">Archivo actual: {{ form.fileName }}</span>
           <input id="file" ref="fileInputRef" type="file" style="display:none;" @change="onFileChange" accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/markdown,.md" />
         </template>
@@ -84,6 +84,7 @@ import { ref, watch } from 'vue';
 import { DOCUMENT_LANGUAGES } from '../../store/auth';
 
 interface FormData {
+  id?: number | null;
   title: string;
   description: string;
   author: string;
@@ -99,6 +100,7 @@ const fileInputRef = ref<HTMLInputElement | null>(null);
 const props = defineProps<{ editData?: Partial<FormData> }>();
 const isEdit = ref(false);
 const form = ref<FormData>({
+  id: null,
   title: '',
   description: '',
   author: '',
@@ -115,15 +117,26 @@ watch(() => props.editData, (val) => {
   if (val) {
     console.log('Edit data received:', val);
     isEdit.value = true;
+    let versionPrimero = 1;
+    let versionSegundo = 0;
+    if (val.version && typeof val.version === 'string' && val.version.includes('.')) {
+      const parts = val.version.split('.');
+      versionPrimero = Number(parts[0]) || 1;
+      versionSegundo = Number(parts[1]) || 0;
+    } else if (typeof (val as any).versionPrimero === 'number' && typeof (val as any).versionSegundo === 'number') {
+      versionPrimero = (val as any).versionPrimero;
+      versionSegundo = (val as any).versionSegundo;
+    }
     form.value = {
+      id: val.id || null,
       title: val.title || '',
       description: val.description || '',
       author: val.author || '',
-      category: val.category || '',
+      category: (val as any).categoryId || val.category || '',
       language: val.language || 'es',
       version: typeof val.version === 'string' ? val.version : '',
-      versionPrimero: typeof (val as any).versionPrimero === 'number' ? (val as any).versionPrimero : 1,
-      versionSegundo: typeof (val as any).versionSegundo === 'number' ? (val as any).versionSegundo : 0,
+      versionPrimero,
+      versionSegundo,
       file: null,
       fileName: val.fileName || ''
     };
@@ -168,6 +181,13 @@ function onSubmit() {
   if (!isEdit.value && !form.value.file) {
     error.value = 'Debes seleccionar un archivo.';
     return;
+  } else if (isEdit.value) {
+    // En edición, nunca mostrar el mensaje de archivo requerido
+    error.value = '';
+  }
+  // Si está editando y no selecciona archivo, enviar null
+  if (isEdit.value && !form.value.file) {
+    form.value.file = null;
   }
   form.value.version = `${form.value.versionPrimero}.${form.value.versionSegundo}`;
   // Simulación de envío
@@ -180,6 +200,7 @@ function onSubmit() {
   } catch {}
 
   uploadDocument({
+    id: form.value.id,
     title: form.value.title,
     description: form.value.description,
     author: form.value.author,
@@ -203,26 +224,28 @@ function onSubmit() {
     });
 }
 
-async function uploadDocument({
+async function uploadDocument({     
+  id,
   title,
   description,
-  author,         
-  categoryId,     // debe ser el id de la categoría seleccionada
+  author,    
+  categoryId,
   language,
   version,
-  file,           // archivo seleccionado (File object)
-  userRole,       // rol del usuario (ej: 'admin', 'editor', 'viewer')
-  userId          // id del usuario autenticado
-}) {
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('description', description);
-  formData.append('author', author);
-  formData.append('uploadedBy', userId);      
-  formData.append('categoryId', categoryId);
-  formData.append('language', language);
-  formData.append('version', version);
-  formData.append('file', file);
+  file,
+  userRole,
+  userId
+  }) {
+    const formData = new FormData();
+    formData.append('id', id !== undefined && id !== null ? String(id) : '');
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('author', author);
+    formData.append('uploadedBy', userId);      
+    formData.append('categoryId', categoryId);
+    formData.append('language', language);
+    formData.append('version', version);
+    formData.append('file', file);
 
   const response = await fetch('http://localhost:3000/api/documents/upload', {
     method: 'POST',

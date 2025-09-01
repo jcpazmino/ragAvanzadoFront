@@ -9,6 +9,13 @@ import DocumentForm from '../components/documents/form.vue';
 
 const store = useAuthStore();
 const router = useRouter();
+
+onMounted(() => {
+  const user = localStorage.getItem('user');
+  if (!user) {
+    router.push({ name: 'login' });
+  }
+});
 function logout() {
   store.logout();
   router.push({ name: 'login' });

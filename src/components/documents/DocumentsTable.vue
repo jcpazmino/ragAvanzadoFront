@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, version } from 'vue';
 const emit = defineEmits(['add-document', 'edit-document']);
 import '../../styles/documents.css';
 
@@ -64,7 +64,8 @@ function fetchDocuments() {
         categoryName: doc.category_name,
         metadata: doc.metadata,
         createdAt: doc.created_at,
-        author: doc.author || ''
+        author: doc.author || '',
+        version: doc.version || '1.0'
       }));
       totalCount.value = data.count || 0;
       totalPages.value = Math.max(1, Math.ceil((data.count || 0) / limit.value));
