@@ -99,20 +99,23 @@ watch([page, limit, filterTitle, filterCategory], fetchDocuments);
         </tr>
       </thead>
       <tbody>
-        <tr v-if="loading"><td colspan="7">Cargando...</td></tr>
-        <tr v-if="error"><td colspan="7" style="color:#d32f2f;">{{ error }}</td></tr>
-        <tr v-for="doc in documents" :key="doc.id">
-          <td>{{ doc.title }}</td>
-          <td>{{ doc.fileName }}</td>
-          <td>{{ doc.categoryName }}</td>
-          <td>{{ doc.description }}</td>
-          <td>{{ doc.language }}</td>
-          <td>
-            <a href="#" class="users-link" @click.prevent="emit('edit-document', doc)">Modificar</a>
-            <a href="#" class="users-link">Embeddings</a>
-            <a href="#" class="users-link">Eliminar</a>
-          </td>
-        </tr>
+          <tr v-if="loading"><td colspan="6">Cargando...</td></tr>
+          <tr v-if="error"><td colspan="6" style="color:#d32f2f;">{{ error }}</td></tr>
+          <tr v-if="!loading && !error && documents.length === 0">
+            <td colspan="6" style="text-align:center; color:#888; font-style:italic;">No existen documentos registrados.</td>
+          </tr>
+          <tr v-for="doc in documents" :key="doc.id" v-if="documents.length > 0">
+            <td>{{ doc.title }}</td>
+            <td>{{ doc.fileName }}</td>
+            <td>{{ doc.categoryName }}</td>
+            <td>{{ doc.description }}</td>
+            <td>{{ doc.language }}</td>
+            <td>
+              <a href="#" class="users-link" @click.prevent="emit('edit-document', doc)">Modificar</a>
+              <a href="#" class="users-link">Embeddings</a>
+              <a href="#" class="users-link">Eliminar</a>
+            </td>
+          </tr>
       </tbody>
     </table>
     <div v-if="totalPages > 1" class="pagination-container">
